@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function Mostrar() {
+            fetch('https://fakestoreemma.onrender.com/products')
+                .then(res => res.json())
+                .then(json => catalogo(json))
+
+            function catalogo(productos) {
+                const catalogo = document.querySelector('#productos')
+
+                productos.forEach(producto => {
+                    catalogo.innerHTML += `
+                <div class="card mb-5 me-5" style="width: 20%;display:inline-block;">
+                    <img src="${producto.image}" class="card-img-top img-fluid" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">${producto.title}</h5>
+                        <h6 class="card-text">$${producto.price}</h6>
+                        <a href="#" type="button" onclick="Detalles(${producto.id})" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Detalles</a>
+                    </div>
+                </div>`;
+                });
+            }
+        }
+
+        function Detalles(id) {
+            fetch(`https://fakestoreemma.onrender.com/products/${id}`)
+                .then(res => res.json())
+                .then(json => InformacionDetalle(json))
+
+            function InformacionDetalle(detalle) {
+                const img = document.querySelector('#imgCarrito')
+                const info = document.querySelector('#info')
+                const button = document.querySelector('#buttonA')
+
+                img.innerHTML = `
+                    <img src="${detalle.image}" alt="" id="imgD">
+                `
+                info.innerHTML = `
+                    <h5 class="card-title mb-2">${detalle.title}</h5>
+                    <div class="btn-group btn-group-toggle mt-3 mb-2" data-toggle="buttons">
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="talla" autocomplete="off" value="S">
+                            S
+                        </label>
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="talla" autocomplete="off" value="M">
+                            M
+                        </label>
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="talla" autocomplete="off" value="L">
+                            L
+                        </label>
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="talla" autocomplete="off" value="XL">
+                            XL
+                        </label>
+                    </div>
+                    <h6 class="card-text mt-2">$${detalle.price}</h6>
+                `
+
+                button.innerHTML = `
+                    <button type="button" class="btn btn-outline-success" onclick="Agregar(${detalle.id})">Añadir al Carrito</button>
+                `
+            }
+        }
+
+        function Agregar(id) {
+            fetch(`https://fakestoreemma.onrender.com/products/${id}`)
+                .then(res => res.json())
+                .then(json => InfoCarrito(json))
+
+            function InfoCarrito(articulos) {
+                const mostrar = document.querySelector('#mostrar');
+                const fotter = document.querySelector('#pagar')
+
+                mostrar.innerHTML += `
+                    <div class="card border-0 ms-4" style="width: 20rem;">
+                        <img src="${articulos.image}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">${articulos.title}</h5>
+                            <p class="card-text">$${articulos.price}</p>
+                        </div>
+                    </div>
+                `
+
+                fotter.innerHTML = `
+                    <div class="d-inline-flex">
+                        <h3 class="mt-1">Total:<h3>
+                        <button class="btn btn-outline-success">Pagar</button>
+                    </div>
+                `
+            }
+        }
+    </script>
+    <style>
+        .card {
+            height: 430px;
+            width: 200px;
+            margin: 10px;
+            overflow: hidden;
+            display: flex;
+            text-align: center;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-img-top {
+            width: auto;
+            height: 250px;
+            object-fit: cover;
+            padding-block: .5rem;
+            margin: auto;
+            object-fit: cover;
+        }
+
+        .button-container {
+            display: inline-block;
+            position: relative;
+        }
+
+        .button-container a {
+            position: absolute;
+            bottom: 4em;
+            left: 5em;
+            border-radius: 1.5em;
+            padding: 1em 1.5em;
+        }
+
+        .modal-dialog {
+            max-width: 30%;
+        }
+
+        #imgD {
+            width: 50%;
+        }
+
+        #imgCarrito {
+            width: 50%;
+        }
+    </style>
+</head>
+
+<body onload="Mostrar()">
+    <nav class="navbar navbar-expand-lg" style="background-color: #e8cac3;">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav justify-content-start">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Productos</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Colecciones
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Coleccion 1</a></li>
+                            <li><a class="dropdown-item" href="#">Coleccion 2</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Administraddor
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/views/listar_productos.html">Productos</a></li>
+                            <li><a class="dropdown-item" href="#">Usuarios</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="navbar-nav mx-auto align-items-lg-center">
+                    <a class="navbar-brand ms-3" href="/views/index.html"><img src="/assets/img/logo_principal.png" alt=""></a>
+                </ul>
+                <ul class="navbar-nav justify-content-end">
+                    <li class="nav-item ms-5">
+                        <a class="nav-link active" aria-current="page" href="#"><button
+                                class="btn btn-outline-dark text-dark-50" data-bs-toggle="modal"
+                                data-bs-target="#login">Iniciar Sesion</button></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#"><button
+                                class="btn btn-outline-dark text-dark-50" data-bs-toggle="modal"
+                                data-bs-target="#register">Registrarse</button></a>
+                    </li>
+                    <li class="nav-item mt-2 m-2">
+                        <button class="btn btn-outline-dark" data-bs-toggle="offcanvas" data-bs-target="#carrito"
+                            aria-controls="carrito">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-cart" viewBox="0 0 16 16">
+                                <path
+                                    d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                            </svg>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="modal" id="login">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Inicio Sesion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="emailLogin" class="form-label">Correo Electronico:</label>
+                            <input type="email" class="form-control" id="emailLogin" aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label for="passwordLogin" class="form-label">Contraseña:</label>
+                            <input type="password" class="form-control" id="passwordLogin">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="save">
+                            <label class="form-check-label" for="save">Recuerdame</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-success">Iniciar Sesion</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="register">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Correo Electronico:</label>
+                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nombre Completo:</label>
+                            <input type="text" class="form-control" id="name" aria-describedby="nameHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña:</label>
+                            <input type="password" class="form-control" id="password">
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Contraseña:</label>
+                            <input type="password" class="form-control" id="confirmPassword">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-success">Registrarse</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="carrito"
+        aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Carrito de Compras</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body" id="carrito">
+            <div id="mostrar">
+
+            </div>
+            <hr>
+            <div id="pagar">
+                
+            </div>
+        </div>
+    </div>
+    <div class="modal fade col-lg-6" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Detalle</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-inline-flex">
+                    <div id="imgCarrito" class="ms-5">
+
+                    </div>
+                    <div id="info" class="me-3">
+
+                    </div>
+                </div>
+                <div class="modal-footer" id="buttonA">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="m-5">
+        <section>
+            <h4 class="text-center mt-3">Productos</h4>
+            <div id="productos" class="container-fluid ms-5">
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
